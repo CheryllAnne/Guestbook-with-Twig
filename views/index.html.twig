@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" >
+<html>
+<head>
+    <title>GUESTBOOK!</title>
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div align='center'>
+    <form id='form_logs' action = './index.php' method='post' >
+        <table>
+            <tr>
+                <td><span style='color: snow'>Name :</span></td>
+                <td><input type='text' name='name' style='padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 18px; margin-bottom: 16px;' /></td>
+            </tr>
+
+            <tr>
+                <td><span style='color: snow'>Email :</span></td>
+                <td><input type='text' name='email' style='padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 18px; margin-bottom: 16px; ' /></td>
+            </tr>
+
+            <tr>
+                <td><span style='color: snow'>Comment :</span></td>
+                <td><textarea  name='comment' style= 'width: 220px; height: 100px; padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 16px; margin-bottom: 16px; ' ></textarea></td>
+            </tr>
+
+            <tr>
+                <td><input type='submit' name='postbtn' value='POST'
+                           style='font-size: 16px; font-weight: bold; margin-top: 20px;'  /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<!-----posts----->
+{%  if numrows > 0  %}
+    <div class='booklogs' >
+            {% for _comment in comments %}
+                <form name='form1' action='' method='post' >
+                    <h3><b>{{ _comment.name }}</b> posted at <b>{{ _comment.time }}</b> on <b>{{ _comment.date }}</b></h3> <br/>
+                    <!-- <h3>{{ _comment.comment }}</h3> -->
+                    <input type='text' name='comment' value='{{ _comment.comment }}'
+                           style='background: transparent; border: none; color: mintcream; font-size: 16px;
+                           font-weight: bold; padding-left: 50px; margin-bottom: 16px;'/>
+                    <input type='hidden' name='num[]' class='checkbox' value='{{ _comment.id }}'>
+                    <input type='submit' name='editbtn' value='Edit' style='background-color: orange; padding-top: 2px; border: transparent; font-size: 10px; ' />
+                    <input type='hidden' name='hid[]' value='{{ _comment.id }}' />
+                    <input type ='submit' name='deletebtn'  value='X' style='font-size: 16px; font-weight: bold;
+                    color: floralwhite ; margin-top: 20px; background-color: red; border:
+                    transparent; margin-bottom: 20px; padding: auto' />
+                </form>
+            {% endfor %}
+    </div><hr />
+
+{% endif %}
+</body>
+</html>
