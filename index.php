@@ -9,7 +9,6 @@ $twig = new Twig_Environment($loader);
 $conn = mysqli_connect("localhost:3306", "root", "root") or die(mysqli_error($conn));
 mysqli_select_db($conn, "guestbook") or die(mysqli_error($conn));
 
-
 //check if Update btn has been pressed
 // updatebtn was an unset value - runtime error
 if (isset($_POST['postbtn'])) { //isset= test for the existence of a variable or array element without actually trying to access it
@@ -17,54 +16,85 @@ if (isset($_POST['postbtn'])) { //isset= test for the existence of a variable or
     $email = strip_tags($_POST['email']);
     $comment = strip_tags($_POST['comment']);
 
-    if ($name && $email && $comment) {
+    if((strlen($email) >= 7) && (strstr($email, "@")) && (strstr($email, ".")) && $name && $comment){
         date_default_timezone_set('Asia/Kuala_Lumpur');
         $time = date("h:i:s A");
         $date = date("F d,Y");
-        //$idString = implode(',', $_POST['comment']);
-        //add to the db ( guestbook )
-        mysqli_query($conn, "INSERT INTO guestList (name, email, comment, time, date) VALUES 
+
+        $newpost = mysqli_query($conn, "INSERT INTO guestList (name, email, comment, time, date) VALUES 
                     ('$name', '$email', '$comment', '$time', '$date')") or die(mysqli_error($conn));
-        echo "<h1> Guest Book Updated!</h1>";
-    } else
-        echo "<h1>You have not completed the required information!</h1>";
+
+        $validation = 'GUESTBOOK UPDATED';
+
+    }else{
+        $error = 'Invalid input! (Please enter a valid email)';
+    }
+
+
 }
 
 if (isset($_POST['deletebtn'])) {
     //if id array is not empty
     //get all selected id and convert to string
     $idStr = implode(',', $_POST['num']);
-    //$id = ($_POST['id']);
-    //delete records from database
     $delete = mysqli_query($conn, "DELETE FROM `guestList` WHERE `id` = ('$idStr') ") or die(mysqli_error($conn)) ;
     //if delete is successful
     if ($delete == true) {
-        $statusMsg = 'Selected comments have been deleted successfully!';
-    } else {
+        $statusMsg = 'Selected comment has been deleted successfully!';
+    } else if($delete == false) {
         $statusMsg = 'Error occurred, please try again.';
     }
 }
 
 if (isset($_POST['editbtn'])) {
-    //foreach ($_POST['hid'] AS $id) {
         $id = implode(',', $_POST['hid']);
         $comment = strip_tags($_POST['comment']);
         $update = mysqli_query($conn, "UPDATE `guestList` SET `comment` = '$comment' WHERE `id`= ('$id')") or die(mysqli_error($conn));
-    //}
     if ($update == true) {
         $statusMsg = 'Edit successful!';
     } else {
         $statusMsg = 'Error occurred, please try again.';
     }
 }
-//echo "<h4>$statusMsg</h4>";
+
+// Pagination
+$page = 1;
+//number of results per page
+$results_per_page = 5;
 
 $query = mysqli_query($conn, "SELECT * FROM guestList ORDER BY id DESC") or mysqli_error($conn);
 $numrows = mysqli_num_rows($query);
-if ($numrows > 0) {
 
+//determine total number of pages available
+$number_of_pages = ceil($numrows/$results_per_page);
+
+//determine which page the user is currently on
+if(!isset($_GET['page'])) {
+    $page = 1;
+}else{
+    $page = $_GET['page'];
+}
+
+// pagination adjustment started from here
+$pagenum = 1;
+
+if($pagenum < 1 ){
+    $pagenum = 1;
+} else if($pagenum > $number_of_pages) {
+    $pagenum = $number_of_pages;
+}
+
+$this_page_first_result = 0;
+//determine the sql LIMIT starting number for the result on the displaying page
+$this_page_first_result .= ($page-1)*($results_per_page);
+// retrieve selected results from database and display them on page
+$query_pag = ("SELECT * FROM guestList ORDER BY id DESC LIMIT " . $this_page_first_result . ',' . $results_per_page);
+$result = mysqli_query($conn, $query_pag);
+
+
+if ($numrows > 0) {
     $comments = array();
-    while ($row = mysqli_fetch_assoc($query)) {
+    while ($row = mysqli_fetch_array($result)) {
         $id = $row['id'];
         $name = $row['name'];
         $email = $row['email'];
@@ -73,7 +103,6 @@ if ($numrows > 0) {
         $date = $row['date'];
         $comment = nl2br($comment);
 
-
         $comments[] = array(
             'id' => $id,
             'name' => $name,
@@ -81,9 +110,7 @@ if ($numrows > 0) {
             'comment' => $comment,
             'time' => $time,
             'date' => $date,
-
         );
-
     }
 
     echo $twig->render('index.html.twig', array(
@@ -91,10 +118,11 @@ if ($numrows > 0) {
         'name' => $name, 'time' => $time,
         'date' => $date, 'email' => $email,
         'comments' => $comments, 'numrows' => $numrows,
-
+        'page' => $page, 'number_of_pages' => $number_of_pages,
+        'results_per_page' => $results_per_page, 'this_page_first_result' => $this_page_first_result,
+        'result' => $result, 'statusMsg' => $statusMsg, 'validation' => $validation, 'error' => $error,
     ));
-} else {
-    echo "<h1>NO POSTS</h1>";
+
 }
 
 mysqli_close($conn);

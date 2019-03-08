@@ -1,61 +1,126 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" >
 <html>
 <head>
+
     <title>GUESTBOOK!</title>
     <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" >
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<div align='center'>
-    <form id='form_logs' action = './index.php' method='post' >
-        <table>
-            <tr>
-                <td><span style='color: snow'>Name :</span></td>
-                <td><input type='text' name='name' style='padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 18px; margin-bottom: 16px;' /></td>
-            </tr>
 
-            <tr>
-                <td><span style='color: snow'>Email :</span></td>
-                <td><input type='text' name='email' style='padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 18px; margin-bottom: 16px; ' /></td>
-            </tr>
+<section id = "header">
+<div class = "menu-bar">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="index.html.twig"><img src = "images/love.png" width="50px" height="50px"> MR. & MRS. XXXX </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <tr>
-                <td><span style='color: snow'>Comment :</span></td>
-                <td><textarea  name='comment' style= 'width: 220px; height: 100px; padding-left: 50px; background: transparent; border: none; border-bottom: 1px solid beige; color: floralwhite; font-size: 16px; margin-bottom: 16px; ' ></textarea></td>
-            </tr>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html.twig">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="posts.html.twig">ALL POSTS</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
 
-            <tr>
-                <td><input type='submit' name='postbtn' value='POST'
-                           style='font-size: 16px; font-weight: bold; margin-top: 20px;'  /></td>
-            </tr>
-        </table>
+<div class = "banner text-center" >
+    <h1>Drop your wishes here for us </h1>
+</div>
+</section>
+
+<div class = "chat-form text-center">
+    <form class="form_logs" action = "./index.php" method="post" >
+        <input type="text" class="form-control" name="name" placeholder="Name">
+        <input type="text" class="form-control" name="email" placeholder="Email">
+        <input type="text" class="form-control" name="comment" placeholder="Your Message">
+        <input type="submit" class="btn btn-primary" name="postbtn" value="POST">
+        <br/><b>{{ error }}</b><br/>
     </form>
 </div>
 
 <!-----posts----->
 {%  if numrows > 0  %}
-    <div class='booklogs' >
+    <div class = 'container '>
+        <div class='booklogs' >
+            <br/><b>{{ validation }}</b>
+            <br/><b><i>{{ statusMsg }}</i></b><br/>
             {% for _comment in comments %}
-                <form name='form1' action='' method='post' >
-                    <h3><b>{{ _comment.name }}</b> posted at <b>{{ _comment.time }}</b> on <b>{{ _comment.date }}</b></h3> <br/>
-                    <!-- <h3>{{ _comment.comment }}</h3> -->
-                    <input type='text' name='comment' value='{{ _comment.comment }}'
-                           style='background: transparent; border: none; color: mintcream; font-size: 16px;
-                           font-weight: bold; padding-left: 50px; margin-bottom: 16px;'/>
-                    <input type='hidden' name='num[]' class='checkbox' value='{{ _comment.id }}'>
+                <form name='form1' action='index.php' method='post' >
+                    <h3 class="title is-3"><b>{{ _comment.name }}</b> posted at <b>{{ _comment.time }}</b>
+                        on <b>{{ _comment.date }}</b></h3>
+                    <input type='text' name='comment' value='{{ _comment.comment }}' style='background: transparent; border: none; color: darkcyan; font-size: 16px;
+                               font-weight: bold; padding-left: 50px; margin-bottom: 16px;'/>
                     <input type='submit' name='editbtn' value='Edit' style='background-color: orange; padding-top: 2px; border: transparent; font-size: 10px; ' />
                     <input type='hidden' name='hid[]' value='{{ _comment.id }}' />
+                    <input type='hidden' name='num[]' class='checkbox' value='{{ _comment.id }}'>
                     <input type ='submit' name='deletebtn'  value='X' style='font-size: 16px; font-weight: bold;
-                    color: floralwhite ; margin-top: 20px; background-color: red; border:
-                    transparent; margin-bottom: 20px; padding: auto' />
+                        color: floralwhite ; margin-top: 20px; background-color: red; border:
+                        transparent; margin-bottom: 20px; padding: auto' />
+                    <h4>{{ _comment.email }}</h4>
                 </form>
             {% endfor %}
-    </div><hr />
-
+        </div><hr />
+    </div>
 {% endif %}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page > 1 %}
+        <li class="page-item"><a class="page-link" href="index.php?page={{ page-1 }}">Previous</a></li>
+            {% elseif pagenum == 1 %}
+            <li class="page-item"><a class="page-link" href="index.php?page={{ page }}"></a></li>
+            {% else %}
+        {% endif %}
+
+        {% for page in range(1,number_of_pages) %}
+        <li class="page-item"><a class="page-link" href="index.php?page={{ page }}">{{ page }}</a></li>
+        {% endfor %}
+
+        {% if page < number_of_pages %}
+        <li class="page-item"><a class="page-link" href="index.php?page={{ page+1 }}">Next</a></li>
+            {% elseif pagenum == number_of_pages %}
+            <li class="page-item"><a class="page-link" href="index.php?page={{ page }}"></a></li>
+        {% else %}
+        {% endif %}
+    </ul>
+</nav>
+
+<div class ='counter'>
+    <br/>Total number of wishes : {{ numrows }}
+    <br/>You are currently in page {{ page }} of {{ number_of_pages }} pages.<br/><br/>
+</div>
+
 </body>
 </html>
