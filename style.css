@@ -72,16 +72,28 @@
     border-color: deeppink !important;
 }
 
+
 .chat-form .btn-primary{
     display: inline-flex;
     box-shadow: none !important;
     border-radius: 10px;
     border: deeppink;
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 50px;
     padding: 5px 20px;
     color: deeppink;
     background-color: black;
 }
+
+.chat-form .image-control{
+    position: center;
+    display: inline-flex;
+    border-radius: 10px;
+    padding: 5px 20px;
+    color: deeppink;
+    background-color: black;
+}
+
 
 .form-inline .btn-outline-success{
     border-color: black !important;
@@ -95,6 +107,18 @@
     border-radius: 5px;
     border-color: deeppink !important;
     background-repeat: no-repeat;
+}
+
+.logs .delete-btn{
+    font-size: 10px;
+    font-weight: bold;
+    color: floralwhite;
+    background-color: red;
+    border: transparent;
+    margin-bottom: 20px;
+    margin-right: 3px;
+    padding: 5px;
+    margin-left: 100px;
 }
 
 .pagination > li > a

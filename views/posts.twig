@@ -13,11 +13,10 @@
 </head>
 
 <body>
-
 <section id = "header">
 <div class = "menu-bar">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="index.html.twig"><img src = "images/love.png" width="50px" height="50px"> MR. & MRS. XXXX </a>
+        <a class="navbar-brand" href="posts.twig"><img src = "images/love.png" width="50px" height="50px"> WELCOME {{ username }} </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,10 +25,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html.twig">HOME</a>
+                    <a class="nav-link" href="posts.php">HOME</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="posts.html.twig">ALL POSTS</a>
+                    <a class="nav-link" href="login.php">LOGOUT</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -60,38 +59,64 @@
 </div>
 </section>
 
+
+
+
 <div class = "chat-form text-center">
-    <form class="form_logs" action = "./index.php" method="post" >
-        <input type="text" class="form-control" name="name" placeholder="Name">
-        <input type="text" class="form-control" name="email" placeholder="Email">
-        <input type="text" class="form-control" name="comment" placeholder="Your Message">
+    <form class="form_logs" action = "./posts.php" method="post" enctype="multipart/form-data">
+        <div class="error-msg text-center">
+
+            {{ session.success }}{{ session.delete }}{{ session.edit }}
+            {{ session.error }}{{ session.uploaded }}{{ notUploaded }}<br/>
+        </div>
+        <input type="text" class="form-control" name="name" placeholder="Name" required value={{ username }}>
+        <input type="text" class="form-control" name="email" placeholder="Email" required><br/>
+        <textarea class="form-control" name="comment" placeholder="Your Message" required ></textarea>
         <input type="submit" class="btn btn-primary" name="postbtn" value="POST">
-        <br/><b>{{ error }}</b><br/>
+        <input type="hidden" name="size" value="1000000"/>
+        <br/><input type="file" class="image-control" name="file"/>
+
     </form>
 </div>
 
 <!-----posts----->
 {%  if numrows > 0  %}
-    <div class = 'container '>
-        <div class='booklogs' >
-            <br/><b>{{ validation }}</b>
-            <br/><b><i>{{ statusMsg }}</i></b><br/>
+    <div class = "container">
+        <div class="booklogs has-text-centered" >
             {% for _comment in comments %}
-                <form name='form1' action='index.php' method='post' >
+                <form name='form1' action='posts.php' method='post' >
                     <h3 class="title is-3"><b>{{ _comment.name }}</b> posted at <b>{{ _comment.time }}</b>
                         on <b>{{ _comment.date }}</b></h3>
                     <input type='text' name='comment' value='{{ _comment.comment }}' style='background: transparent; border: none; color: darkcyan; font-size: 16px;
                                font-weight: bold; padding-left: 50px; margin-bottom: 16px;'/>
-                    <input type='submit' name='editbtn' value='Edit' style='background-color: orange; padding-top: 2px; border: transparent; font-size: 10px; ' />
+                    <input type='submit' class="btn edit-btn btn-outline-success btn-sm float-right submit_btn" name='editbtn' value='Edit' style='background-color: orange; padding: 5px ; border: transparent; font-size: 10px; color: black; ' />
                     <input type='hidden' name='hid[]' value='{{ _comment.id }}' />
                     <input type='hidden' name='num[]' class='checkbox' value='{{ _comment.id }}'>
-                    <input type ='submit' name='deletebtn'  value='X' style='font-size: 16px; font-weight: bold;
-                        color: floralwhite ; margin-top: 20px; background-color: red; border:
-                        transparent; margin-bottom: 20px; padding: auto' />
-                    <h4>{{ _comment.email }}</h4>
+                    <input type ='submit' class="btn delete-btn btn-sm float-right" name='deletebtn'  value='Delete' style='font-size: 10px; font-weight: bold;
+                        color: floralwhite ; background-color: red; border: transparent; margin-bottom: 20px; margin-right: 3px; padding: 5px' />
+                    <h4 class="comments text-center"><b>Email address: {{ _comment.email }}</b></h4>
+
+                    {% if _comment.type == "image" %}
+
+                        <img src="uploads/{{ _comment.image }}" alt="image">
+
+                    {% elseif _comment.type == "video" %}
+
+                        <video width="320" height="240" controls>
+                        <source src="uploads/{{ _comment.image }}" type="video/mp4">
+                        <source src="uploads/{{ _comment.image }}" type="video/ogg">
+                        Your browser does not support the video tag.
+                        </video>
+
+                        {% else %}
+
+                    {% endif %}
+
+
+                <hr/>
                 </form>
             {% endfor %}
-        </div><hr />
+        </div>
     </div>
 {% endif %}
 
@@ -112,7 +137,7 @@
         <li class="page-item"><a class="page-link" href="index.php?page={{ page+1 }}">Next</a></li>
             {% elseif pagenum == number_of_pages %}
             <li class="page-item"><a class="page-link" href="index.php?page={{ page }}"></a></li>
-        {% else %}
+            {% else %}
         {% endif %}
     </ul>
 </nav>
@@ -121,6 +146,34 @@
     <br/>Total number of wishes : {{ numrows }}
     <br/>You are currently in page {{ page }} of {{ number_of_pages }} pages.<br/><br/>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+
+        $('.delete-btn').on('click', function(e){
+            let status = confirm('Are you sure you want to delete?');
+
+            if(!status) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+
+    $(function() {
+
+        $('.edit-btn').on('click', function(a){
+            let status = confirm('Are you sure you want to make changes?');
+
+            if(!status) {
+                a.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+
+
 
 </body>
 </html>

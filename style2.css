@@ -1,0 +1,13 @@
+.container{
+    background-image: linear-gradient(to bottom, white, lightpink ,coral);
+}
+
+.card-header{
+    background-image: linear-gradient(to bottom, white, lightpink);
+}
+
+.card-footer.btn-outline-success{
+    border-color: black !important;
+    color: black;
+}
+
