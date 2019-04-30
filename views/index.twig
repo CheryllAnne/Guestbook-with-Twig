@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration Page</title>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="css/style2.css">
     <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -48,7 +48,13 @@
                             <a class="btn btn-outline-success" href="login.php">I'M REGISTERED!</a>
                             <input type="submit" class="btn btn-outline-success" name="registerbtn" value="REGISTER"/>
                         </div>
-                        {{ success }}
+
+                        {% if success == true %}
+                        <div class="alert alert-success">
+                            {{ success }}
+                        </div>
+                        {% endif %}
+
                     </div>
                 </form>
             </div>

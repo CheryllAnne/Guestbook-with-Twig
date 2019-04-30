@@ -37,7 +37,7 @@
 
 .banner{
     height: 60vh;
-    background-image: url(images/guestbook4.jpg);
+    background-image: url(../images/guestbook4.jpg);
     background-size: auto;
     background-position: center;
     background-repeat: repeat-x;
@@ -59,7 +59,7 @@
     padding: 20px 0;
     margin: -50px 6% 50px;
     background-image: linear-gradient(to right, coral, hotpink, white, hotpink, coral);
-    border-radius: 5px;
+    border-radius: 10px;
     border-color: white !important;
 }
 

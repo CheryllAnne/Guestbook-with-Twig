@@ -18,7 +18,6 @@ $session = new Session();
 
 //initialize variable
 
-
 //connect to db
 $conn = mysqli_connect("localhost:3306", "root", "root") or die(mysqli_error($conn));
 mysqli_select_db($conn, "guestbook") or die(mysqli_error($conn));
@@ -36,7 +35,6 @@ if (isset($_POST['registerbtn'])) { //isset= test for the existence of a variabl
     }
     if(empty($email)){
         $session->flash('email_error', "Email is required!");
-
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $email = false;
         $session->flash('v_error', "Email invalid!");
@@ -47,19 +45,6 @@ if (isset($_POST['registerbtn'])) { //isset= test for the existence of a variabl
     if($password1 != $password2){
         $session->flash('p2_error', "Passwords does not match!");
     }
-
-    /*if(isset($_POST['username']) && $_POST['username'] != "") {
-        $username = $_POST['username'];
-    }
-    if(isset($_POST['email']) && $_POST['email'] != "") {
-        $email = $_POST['email'];
-    }
-    if(isset($_POST['password1']) && $_POST['password1'] != "") {
-        $password1= $_POST['password1'];
-    }
-    if($password1 != $password2){
-        $errors = "Passwords does not match!";
-    }*/
 
 //check db for existing users with same username
     else {
@@ -82,9 +67,7 @@ if (isset($_POST['registerbtn'])) { //isset= test for the existence of a variabl
             $password =password_hash($password1, PASSWORD_DEFAULT); //this will encrypt the password
             $query = mysqli_query($conn, "INSERT INTO `user` (username, email, password) VALUES ('$username', '$email', '$password')");
 
-            //$_SESSION['username'] = $username;
-            //$_SESSION['success'] = "You are now logged in!";
-            $session->flash('success', 'Successfully Registered!');
+            $session->flash('success', 'SUCCESSFULLY REGISTERED!');
             header('location: index.php');
             exit;
         }
@@ -92,7 +75,6 @@ if (isset($_POST['registerbtn'])) { //isset= test for the existence of a variabl
 //register user if no error
 
 }
-
 
 echo $twig->render('index.twig', array(
     'errors' => $errors, 'username' => $username, 'email' => $email, 'password1' => $password1,
@@ -103,8 +85,6 @@ echo $twig->render('index.twig', array(
     'un_error' => $session->get('un_error'), 'mail_error' => $session->get('mail_error'),
     'success' => $session->get('success'),
 ));
-
-
 
 mysqli_close($conn);
 ?>
